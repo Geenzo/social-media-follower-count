@@ -1,0 +1,12 @@
+{
+  "name": "social-media-follower-count",
+  "version": "0.0.1",
+  "description": "Scrape social media accounts.",
+  "main": "server.js",
+  "author": "Darren Hay",
+  "dependencies": {
+    "express": "latest",
+    "request": "latest",
+    "cheerio": "latest"
+  }
+}
