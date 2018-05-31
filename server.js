@@ -11,15 +11,13 @@ app.get('/scrape', function(req, res) {
 
     request(url, function(error, response, html) {
         console.log(`request sent to ${url}`);
-        
+
+        let json = {
+            url: url,
+        }
+
         if(!error) {
             let $ = cheerio.load(html)
-
-            let posts, followers, following
-            let json = {
-                url: url,
-            }
-            
             
             //this is html attribute for tweets / follows / following section
             $('.ProfileNav-stat').filter(function() {
@@ -29,16 +27,24 @@ app.get('/scrape', function(req, res) {
                 let twitterStateNumber = data.children().last().text()
                 let twitterStateNumberParsed = parseInt(twitterStateNumber.replace(/,/g,''), 10)
                 json[twitterStatName] = twitterStateNumberParsed
-
-                console.log(json);
-                
             })
 
         } else {
-            console.log('failed to fetch request');
-            
+            console.log('failed to fetch request'); 
         }
+
+        let todaysDate = new Date()
+        console.log(`output/twitter/${todaysDate}.json`)
+
+        let filePath = `output/twitter/twitterTest.json`
+        fs.writeFile(filePath, JSON.stringify(json, null, 4), function(err) {
+            console.log('File successfully written! - Check your project directory for the output.json file')
+        })
+
+        res.send('Check your console!')
     })
+
+    
 })
 
 app.listen('8081')
