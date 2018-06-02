@@ -3,8 +3,9 @@ const fs = require('fs')
 const request = require('request')
 const cheerio = require('cheerio')
 const app = express()
+const puppeteer = require('puppeteer')
 
-app.get('/scrape', function(req, res) {
+app.get('/scrapeTwitter', function(req, res) {
 
     // scraping from this url
     let url = 'https://twitter.com/geenzo'
@@ -44,9 +45,74 @@ app.get('/scrape', function(req, res) {
             console.log('File successfully written! - Check your project directory for the output.json file')
         })
 
-        res.send('Check your console!')
+        res.send('Twitter Scraped! Check your console!')
     })
 
+    
+})
+
+app.get('/scrapeInstagram', function(req, res) {
+    let url = 'https://www.instagram.com/darrenhay1994/'
+
+    async function getInstagramPage(url) {
+
+        let json = {
+            url: url,
+        }
+        console.log('opening puppeteer')
+        const browser = await puppeteer.launch()
+
+        console.log('going to instagram');
+        
+        const page = await browser.newPage()
+        await page.goto(url, {
+            timeout: 0
+        })
+    
+        console.log(await page.content())
+
+        const pageContent = await page.evaluate(() => {
+            const anchors = Array.from(document.querySelectorAll('.-nal3'))
+            return anchors.map(anchor => anchor.textContent).slice(0, 10)
+          })
+          
+        pageContent.map(item => {
+            console.log(item)
+            let nameAndCountArray = item.split(" ")
+            console.log(nameAndCountArray);
+            let count = nameAndCountArray[0]
+            let name = nameAndCountArray[1]
+            json[name] = count
+            
+        })
+
+        let captureDate = new Date()
+        json.captureDate = captureDate
+
+        console.log(pageContent)
+        console.log(json);
+        
+        var options = {year: 'numeric', month: 'long', day: 'numeric' }
+        let todaysDate = new Date().toLocaleDateString("en-GB", options)
+        
+        let filePath = `output/instagram/${todaysDate}.json`
+        fs.writeFile(filePath, JSON.stringify(json, null, 4), function(err) {
+            console.log('File successfully written! - Check your project directory for the output.json file')
+        })
+
+        await page.screenshot({path: 'screenshot.png'})
+    
+        console.log('closing puppeteer');
+        
+        await browser.close()
+      }
+    
+    getInstagramPage(url)
+    .then(res.send('Instagram Scraped! Check your console!'))
+    .catch(err => {
+        console.log(err);
+        
+    })
     
 })
 

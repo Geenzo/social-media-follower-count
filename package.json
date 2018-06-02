@@ -5,8 +5,9 @@
   "main": "server.js",
   "author": "Darren Hay",
   "dependencies": {
+    "cheerio": "latest",
     "express": "latest",
-    "request": "latest",
-    "cheerio": "latest"
+    "puppeteer": "^1.4.0",
+    "request": "latest"
   }
 }
