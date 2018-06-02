@@ -54,6 +54,7 @@ app.get('/scrapeTwitter', function(req, res) {
 app.get('/scrapeInstagram', function(req, res) {
     let url = 'https://www.instagram.com/darrenhay1994/'
 
+    //TODO: find way to make this fetch page faster
     async function getInstagramPage(url) {
 
         let json = {
@@ -119,6 +120,7 @@ app.get('/scrapeInstagram', function(req, res) {
 app.get('/scrapeFacebook', function(req, res) {
     let url = 'https://www.facebook.com/200StVincentStreet/'
 
+    //TODO: find way to make this fetch page faster
     async function getFacebookPage(url) {
 
         let json = {
@@ -188,6 +190,59 @@ app.get('/scrapeFacebook', function(req, res) {
     
     getFacebookPage(url)
     .then(res.send('Facebook Scraped! Check your console!'))
+    .catch(err => {
+        console.log(err);
+        
+    })
+    
+})
+
+app.get('/scrapeLinkedin', function(req, res) {
+    let url = 'https://www.linkedin.com/company/200-svs/'
+
+    async function getLinkedinPage(url) {
+
+        let json = {
+            url: url,
+        }
+        console.log('opening puppeteer')
+        const browser = await puppeteer.launch({
+            headless: false
+        })
+
+        console.log('going to linkedin');
+        
+        const page = await browser.newPage()
+
+        await page.setRequestInterception(true);
+        page.on('request', request => {
+            if (request.resourceType() === 'image') {
+                request.abort()
+            } else { 
+                request.continue()
+            }
+        });
+
+        await page.goto(url, {
+            timeout: 0
+        })
+
+        const pageContent = await page.evaluate(() => {
+            const anchors = Array.from(document.querySelectorAll('.org-top-card-module__company-descriptions'))
+            return anchors.map(anchor => anchor.textContent).slice(0, 10)
+          })
+          
+        console.log(pageContent);
+        
+
+        await page.screenshot({path: 'screenshot.png'})
+        console.log('closing browser');
+        
+        await browser.close()
+      }
+    
+    getLinkedinPage(url)
+    .then(res.send('Linkedin Scraped! Check your console!'))
     .catch(err => {
         console.log(err);
         
