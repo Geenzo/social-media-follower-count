@@ -67,9 +67,9 @@ app.get('/scrapeInstagram', function(req, res) {
         
         const page = await browser.newPage()
 
-        await page.setRequestInterception(true);
+        await page.setRequestInterception(true)
         page.on('request', request => {
-            if (request.resourceType() === 'image' || request.resourceType() === 'media' || request.resourceType() === 'stylesheet' || request.resourceType() === 'font' || request.resourceType() === 'websocket')
+            if (request.resourceType() === 'image' || request.resourceType() === 'other' ||  request.resourceType() === 'stylesheet')
             request.abort()
             else
             request.continue()
@@ -87,7 +87,7 @@ app.get('/scrapeInstagram', function(req, res) {
         pageContent.map(item => {
             console.log(item)
             let nameAndCountArray = item.split(" ")
-            console.log(nameAndCountArray);
+            console.log(nameAndCountArray)
             let count = nameAndCountArray[0]
             let name = nameAndCountArray[1]
             json[name] = count
@@ -120,7 +120,6 @@ app.get('/scrapeInstagram', function(req, res) {
 app.get('/scrapeFacebook', function(req, res) {
     let url = 'https://www.facebook.com/200StVincentStreet/'
 
-    //TODO: find way to make this fetch page faster
     async function getFacebookPage(url) {
 
         let json = {
@@ -133,18 +132,12 @@ app.get('/scrapeFacebook', function(req, res) {
         
         const page = await browser.newPage()
 
-        await page.setRequestInterception(true);
+        await page.setRequestInterception(true)
         page.on('request', request => {
-            if (request.resourceType() === 'image' || request.resourceType() === 'other' || request.resourceType() === 'script') {
-                console.log('aborted');
-                
-                request.abort()
-                
+            if (request.resourceType() === 'image' || request.resourceType() === 'other' || request.resourceType() === 'script' ||  request.resourceType() === 'stylesheet') {
+                request.abort()       
             } else { 
-                console.log('continue');
-                
                 request.continue()
-
             }
         });
 
@@ -156,8 +149,6 @@ app.get('/scrapeFacebook', function(req, res) {
             const anchors = Array.from(document.querySelectorAll('._4bl9'))
             return anchors.map(anchor => anchor.textContent).slice(0, 10)
           })
-          
-        console.log(pageContent);
         
         pageContent.map(item => {
             if(item.includes('like') || item.includes('follow')) {
@@ -182,9 +173,7 @@ app.get('/scrapeFacebook', function(req, res) {
             console.log('Facebook file successfully written! - Check your project directory for the output.json file')
         })
 
-        await page.screenshot({path: 'screenshot.png'})
-        console.log('closing browser');
-        
+        console.log('closing browser');  
         await browser.close()
       }
     
