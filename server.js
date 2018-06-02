@@ -42,7 +42,7 @@ app.get('/scrapeTwitter', function(req, res) {
         
         let filePath = `output/twitter/${todaysDate}.json`
         fs.writeFile(filePath, JSON.stringify(json, null, 4), function(err) {
-            console.log('File successfully written! - Check your project directory for the output.json file')
+            console.log('Twitter file successfully written! - Check your project directory for the output.json file')
         })
 
         res.send('Twitter Scraped! Check your console!')
@@ -65,11 +65,18 @@ app.get('/scrapeInstagram', function(req, res) {
         console.log('going to instagram');
         
         const page = await browser.newPage()
+
+        await page.setRequestInterception(true);
+        page.on('request', request => {
+            if (request.resourceType() === 'image' || request.resourceType() === 'media' || request.resourceType() === 'stylesheet' || request.resourceType() === 'font' || request.resourceType() === 'websocket')
+            request.abort()
+            else
+            request.continue()
+        });
+
         await page.goto(url, {
             timeout: 0
         })
-    
-        console.log(await page.content())
 
         const pageContent = await page.evaluate(() => {
             const anchors = Array.from(document.querySelectorAll('.-nal3'))
@@ -88,22 +95,15 @@ app.get('/scrapeInstagram', function(req, res) {
 
         let captureDate = new Date()
         json.captureDate = captureDate
-
-        console.log(pageContent)
-        console.log(json);
         
         var options = {year: 'numeric', month: 'long', day: 'numeric' }
         let todaysDate = new Date().toLocaleDateString("en-GB", options)
         
         let filePath = `output/instagram/${todaysDate}.json`
         fs.writeFile(filePath, JSON.stringify(json, null, 4), function(err) {
-            console.log('File successfully written! - Check your project directory for the output.json file')
+            console.log('Instagram file successfully written! - Check your project directory for the output.json file')
         })
-
-        await page.screenshot({path: 'screenshot.png'})
-    
-        console.log('closing puppeteer');
-        
+ 
         await browser.close()
       }
     
