@@ -69,4 +69,4 @@ exports.scrapeInstagramFunc = function(req, res) {
         
     })
     
-}
+}
