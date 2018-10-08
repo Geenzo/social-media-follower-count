@@ -5,9 +5,11 @@
   "main": "server.js",
   "author": "Darren Hay",
   "dependencies": {
-    "cheerio": "latest",
-    "express": "latest",
+    "cheerio": "^1.0.0-rc.2",
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "mongoose": "^5.3.2",
     "puppeteer": "^1.4.0",
-    "request": "latest"
+    "request": "^2.88.0"
   }
 }

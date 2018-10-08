@@ -1,5 +1,7 @@
 const express = require('express')
 const app = express()
+const db = require('./model/db')
+
 const { scrapeTwitterFunc } = require('./routes/twitter')
 const { scrapeInstagramFunc } = require('./routes/instagram')
 const { scrapeFacebookFunc } = require('./routes/facebook')
