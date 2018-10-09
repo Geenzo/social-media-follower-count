@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer')
-const fs = require('fs')
-const path = require('path');
+const { facebookSchema } = require('../model/facebook')
+const mongoose = require('mongoose')
 
 exports.scrapeFacebookFunc = function(req, res) {
     let url = 'https://www.facebook.com/200StVincentStreet/'
@@ -40,25 +40,20 @@ exports.scrapeFacebookFunc = function(req, res) {
                 console.log(item)
                 let nameAndCountArray = item.split(" ")
                 console.log(nameAndCountArray);
-                let count = nameAndCountArray[0]
+                let count = Number(nameAndCountArray[0].replace( /,/g, "" ))
                 let name = nameAndCountArray[2]
                 json[name] = count
             }
-  
         })
 
         let captureDate = new Date()
         json.captureDate = captureDate
-        
-        var options = {year: 'numeric', month: 'long', day: 'numeric' }
-        let todaysDate = new Date().toLocaleDateString("en-GB", options)
 
-        let filePath = path.join(__dirname,`../output/facebook/${todaysDate}.json`)
-        fs.writeFile(filePath, JSON.stringify(json, null, 4), function(err) {
-            if(err) {
-                throw Error('Error: error writing to filepath')
-            }
-            console.log('Facebook file successfully written! - Check your project directory for the output.json file')
+        const facebookModel = mongoose.model('facebook', facebookSchema, 'facebook')
+        const newFacebookCapture = new facebookModel(json)
+        newFacebookCapture.save( err => {
+            if (err) throw Error('Error: saving facebook capture')
+            console.log('saved facebook account successfully')
         })
 
         console.log('closing browser');  

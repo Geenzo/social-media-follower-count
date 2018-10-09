@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer')
-const fs = require('fs')
-const path = require('path');
+const { instagramSchema } = require('../model/instagram')
+const mongoose = require('mongoose')
 
 exports.scrapeInstagramFunc = function(req, res) {
     let url = 'https://www.instagram.com/darrenhay1994/'
@@ -39,7 +39,7 @@ exports.scrapeInstagramFunc = function(req, res) {
             console.log(item)
             let nameAndCountArray = item.split(" ")
             console.log(nameAndCountArray)
-            let count = nameAndCountArray[0]
+            let count = Number(nameAndCountArray[0].replace( /,/g, "" ))
             let name = nameAndCountArray[1]
             json[name] = count
             
@@ -47,16 +47,12 @@ exports.scrapeInstagramFunc = function(req, res) {
 
         let captureDate = new Date()
         json.captureDate = captureDate
-        
-        var options = {year: 'numeric', month: 'long', day: 'numeric' }
-        let todaysDate = new Date().toLocaleDateString("en-GB", options)
-        
-        let filePath = path.join(__dirname, `../output/instagram/${todaysDate}.json`)
-        fs.writeFile(filePath, JSON.stringify(json, null, 4), function(err) {
-            if(err) {
-                throw Error('Error: error writing to filepath')
-            }
-            console.log('Instagram file successfully written! - Check your project directory for the output.json file')
+
+        const instagramModel = mongoose.model('instagram', instagramSchema, 'instagram')
+        const newInstagramCapture = new instagramModel(json)
+        newInstagramCapture.save( err => {
+            if (err) throw Error('Error: saving instagram capture')
+            console.log('saved instagram account successfully')
         })
  
         await browser.close()
