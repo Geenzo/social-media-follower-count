@@ -4,9 +4,11 @@ const { twitterSchema } = require('../model/twitter')
 const mongoose = require('mongoose')
 
 exports.scrapeTwitterFunc = function(req, res) {
+    if (!req.body || !req.body.url) {
+        return res.status(404).json({ success: false, error: 'Error: incorrect payload sent to route' })
+    }
 
-    // scraping from this url
-    let url = 'https://twitter.com/geenzo'
+    const url = req.body.url
 
     request(url, function(error, response, html) {
         if(error) console.log('failed to fetch request'); 
@@ -39,7 +41,7 @@ exports.scrapeTwitterFunc = function(req, res) {
             console.log('saved twitter account successfully')
         })
 
-        res.send('Twitter Scraped! Check your console!')
+        return res.status(200).json({ success: true, error: null })
     })
 
     

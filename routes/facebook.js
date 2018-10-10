@@ -3,10 +3,14 @@ const { facebookSchema } = require('../model/facebook')
 const mongoose = require('mongoose')
 
 exports.scrapeFacebookFunc = function(req, res) {
-    let url = 'https://www.facebook.com/200StVincentStreet/'
+    if (!req.body || !req.body.url) {
+        return res.status(404).json({ success: false, error: 'Error: incorrect payload sent to route' })
+    }
+
+    const url = req.body.url
 
     async function getFacebookPage(url) {
-
+        console.log(`request sent to ${url}`);
         let json = {
             url: url,
         }
@@ -61,7 +65,7 @@ exports.scrapeFacebookFunc = function(req, res) {
       }
     
     getFacebookPage(url)
-    .then(res.send('Facebook Scraped! Check your console!'))
+    .then(res.status(200).json({ success: true, error: null }))
     .catch(err => {
         console.log(err);
         

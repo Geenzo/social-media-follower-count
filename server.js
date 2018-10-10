@@ -1,17 +1,22 @@
 const express = require('express')
 const app = express()
 const db = require('./model/db')
+const bodyParser = require('body-parser')
 
 const { scrapeTwitterFunc } = require('./routes/twitter')
 const { scrapeInstagramFunc } = require('./routes/instagram')
 const { scrapeFacebookFunc } = require('./routes/facebook')
 const { scrapeLinkedinFunc } = require('./routes/linkedin')
 
-app.get('/scrapeTwitter', scrapeTwitterFunc)
 
-app.get('/scrapeInstagram', scrapeInstagramFunc)
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json())
 
-app.get('/scrapeFacebook', scrapeFacebookFunc)
+app.post('/scrapeTwitter', scrapeTwitterFunc)
+
+app.post('/scrapeInstagram', scrapeInstagramFunc)
+
+app.post('/scrapeFacebook', scrapeFacebookFunc)
 
 // TODO: WIP - linkedin has anti-scrapping (requires log in)
 // app.get('/scrapeLinkedin', scrapeLinkedinFunc)

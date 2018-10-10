@@ -3,10 +3,15 @@ const { instagramSchema } = require('../model/instagram')
 const mongoose = require('mongoose')
 
 exports.scrapeInstagramFunc = function(req, res) {
-    let url = 'https://www.instagram.com/darrenhay1994/'
+    if (!req.body || !req.body.url) {
+        return res.status(404).json({ success: false, error: 'Error: incorrect payload sent to route' })
+    }
+
+    const url = req.body.url
 
     //TODO: find way to make this fetch page faster
     async function getInstagramPage(url) {
+        console.log(`request sent to ${url}`);
 
         let json = {
             url: url,
@@ -59,7 +64,7 @@ exports.scrapeInstagramFunc = function(req, res) {
       }
     
     getInstagramPage(url)
-    .then(res.send('Instagram Scraped! Check your console!'))
+    .then(res.status(200).json({ success: true, error: null }))
     .catch(err => {
         console.log(err);
         
