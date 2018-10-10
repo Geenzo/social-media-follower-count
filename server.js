@@ -9,6 +9,7 @@ const { scrapeFacebookFunc } = require('./routes/facebook')
 // const { scrapeLinkedinFunc } = require('./routes/linkedin')
 
 const { addNewPage } = require('./routes/page')
+const { getAllPages } = require('./routes/page')
 
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -21,6 +22,7 @@ app.post('/scrapeInstagram', scrapeInstagramFunc)
 app.post('/scrapeFacebook', scrapeFacebookFunc)
 
 app.post('/addNewPage', addNewPage)
+app.get('/allPages', getAllPages)
 
 // TODO: WIP - linkedin has anti-scrapping (requires log in)
 // app.get('/scrapeLinkedin', scrapeLinkedinFunc)
