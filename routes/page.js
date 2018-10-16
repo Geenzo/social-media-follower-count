@@ -19,26 +19,29 @@ const addNewPage = function(req, res) {
     }
 
     const pageModel = mongoose.model('pages', pageSchema, 'pages')
-    const newPageCapture = new pageModel(pageObj)
-    newPageCapture.save( err => {
-        if (err) throw Error('Error: saving new page capture')
-        console.log('new page saved successfully')
-    })
+    return pageModel.find({url}).then(matchedPage => {
+        if(matchedPage.length > 0) {
+            return res.status(404).json({ success: false, error: 'Error: page with this url already exists' })
+        }
 
-    return res.status(200).json({ success: true, error: null })
+        const newPageCapture = new pageModel(pageObj)
+        return newPageCapture.save( err => {
+            if (err) throw Error('Error: saving new page capture')
+            console.log('new page saved successfully')
+            return res.status(200).json({ success: true, error: null })
+        })
+    });
 }
 
 const getAllPages = function(req, res) {
     const pageModel = mongoose.model('pages', pageSchema, 'pages')
     const allPages = pageModel.find({}).then(pages => {
-        console.log('this is all pages', pages)
         if (!pages || pages.length < 1) {
             return res.status(404).json({ success: false, error: 'Error: no pages were found' })
         }
 
         return res.status(200).json({ success: true, error: null, payload: pages })
     })
-
 }
 
 module.exports = {
