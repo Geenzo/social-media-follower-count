@@ -8,6 +8,10 @@ const { scrapeInstagramFunc } = require('./routes/instagram')
 const { scrapeFacebookFunc } = require('./routes/facebook')
 // const { scrapeLinkedinFunc } = require('./routes/linkedin')
 
+const { getAllTwitter, selectTwitter } = require('./routes/twitter')
+const { getAllInstagram, selectInstagram } = require('./routes/instagram')
+const { getAllFacebook, selectFacebook } = require('./routes/facebook')
+
 const { addNewPage } = require('./routes/page')
 const { getAllPages } = require('./routes/page')
 
@@ -17,10 +21,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
 
 app.post('/scrapeTwitter', scrapeTwitterFunc)
+app.get('/getAllTwitter', getAllTwitter)
+app.post('/selectTwitter', selectTwitter)
 
 app.post('/scrapeInstagram', scrapeInstagramFunc)
+app.get('/getAllInstagram', getAllInstagram)
+app.post('/selectInstagram', selectInstagram)
 
 app.post('/scrapeFacebook', scrapeFacebookFunc)
+app.get('/getAllFacebook', getAllFacebook)
+app.post('/selectFacebook', selectFacebook)
 
 app.post('/addNewPage', addNewPage)
 app.get('/allPages', getAllPages)
