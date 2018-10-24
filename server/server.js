@@ -3,18 +3,12 @@ const app = express()
 const db = require('./model/db')
 const bodyParser = require('body-parser')
 
-const { scrapeTwitterFunc } = require('./routes/twitter')
-const { scrapeInstagramFunc } = require('./routes/instagram')
-const { scrapeFacebookFunc } = require('./routes/facebook')
 // const { scrapeLinkedinFunc } = require('./routes/linkedin')
 
-const { getAllTwitter, selectTwitter } = require('./routes/twitter')
-const { getAllInstagram, selectInstagram } = require('./routes/instagram')
-const { getAllFacebook, selectFacebook } = require('./routes/facebook')
-
-const { addNewPage } = require('./routes/page')
-const { getAllPages } = require('./routes/page')
-
+const { scrapeTwitterFunc, getAllTwitter, selectTwitter } = require('./routes/twitter')
+const { scrapeInstagramFunc, getAllInstagram, selectInstagram } = require('./routes/instagram')
+const { scrapeFacebookFunc, getAllFacebook, selectFacebook } = require('./routes/facebook')
+const { addNewPage, getAllPages } = require('./routes/page')
 const { startScrape } = require('./routes/startScrape')
 
 app.use(bodyParser.urlencoded({ extended: false }));
