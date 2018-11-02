@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const db = require('./model/db')
 const bodyParser = require('body-parser')
-
+const cors = require('cors')
 // const { scrapeLinkedinFunc } = require('./routes/linkedin')
 
 const { scrapeTwitterFunc, getAllTwitter, selectTwitter } = require('./routes/twitter')
@@ -10,6 +10,10 @@ const { scrapeInstagramFunc, getAllInstagram, selectInstagram } = require('./rou
 const { scrapeFacebookFunc, getAllFacebook, selectFacebook } = require('./routes/facebook')
 const { addNewPage, getAllPages } = require('./routes/page')
 const { startScrape } = require('./routes/startScrape')
+
+app.use(cors({
+    origin: 'http://localhost:3000'
+}))
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())

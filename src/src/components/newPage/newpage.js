@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Input, Button, Fa, Card, CardBody } from 'mdbreact';
+import { Container, Row, Col, Input, Button, Card, CardBody } from 'mdbreact';
 
 class NewPage extends Component {
   render() {

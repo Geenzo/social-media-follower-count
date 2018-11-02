@@ -5,19 +5,21 @@ import { Navbar, NavbarBrand, NavbarNav, NavbarToggler, Collapse, NavItem, NavLi
 
 class AppNavbar extends React.Component {
    constructor(props) {
-       super(props);
-       this.state = {
-           collapse: false,
-           isWideEnough: false,
-       };
-   this.onClick = this.onClick.bind(this);
+        super(props);
+        this.state = {
+            collapse: false,
+            isWideEnough: false,
+        };
+
+        this.onClick = this.onClick.bind(this);
    }
 
    onClick(){
-       this.setState({
-           collapse: !this.state.collapse,
-       });
+        this.setState({
+            collapse: !this.state.collapse,
+        });
    }
+   
    render() {
        return (
             <Navbar color="blue" dark expand="md" scrolling>
