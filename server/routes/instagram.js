@@ -99,9 +99,27 @@ const selectInstagram = function(req, res) {
     })
 }
 
+const selectInstagramByURL = function(req, res) {
+    if (!req.body || !req.body.url) {
+        return res.status(404).json({ success: false, error: 'Error: incorrect payload sent to route' })
+    }
+
+    const query = { url: req.body.url}
+    const instagramModel = mongoose.model('instagram', instagramSchema, 'instagram')
+
+    return instagramModel.find(query).then(instagramData => {
+        if (!instagramData || instagramData.length < 1) {
+            return res.status(404).json({ success: false, error: 'Error: no instagram data was found' })
+        }
+
+        return res.status(200).json({ success: true, error: null, payload: instagramData })
+    })
+}
+
 module.exports = {
     scrapeInstagramFunc,
     getInstagramPage,
     getAllInstagram,
-    selectInstagram
+    selectInstagram,
+    selectInstagramByURL
 }

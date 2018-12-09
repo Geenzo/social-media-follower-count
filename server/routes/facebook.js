@@ -101,9 +101,27 @@ const selectFacebook = function(req, res) {
     })
 }
 
+const selectFacebookByURL = function(req, res) {
+    if (!req.body || !req.body.url) {
+        return res.status(404).json({ success: false, error: 'Error: incorrect payload sent to route' })
+    }
+
+    const query = { url: req.body.url}
+    const facebookModel = mongoose.model('facebook', facebookSchema, 'facebook')
+
+    return facebookModel.find(query).then(facebookData => {
+        if (!facebookData || facebookData.length < 1) {
+            return res.status(404).json({ success: false, error: 'Error: no facebook data was found' })
+        }
+
+        return res.status(200).json({ success: true, error: null, payload: facebookData })
+    })
+}
+
 module.exports = {
     scrapeFacebookFunc,
     getFacebookPage,
     getAllFacebook,
-    selectFacebook
+    selectFacebook,
+    selectFacebookByURL
 }

@@ -83,9 +83,27 @@ const selectTwitter = function(req, res) {
     })
 }
 
+const selectTwitterByURL = function(req, res) {
+    if (!req.body || !req.body.url) {
+        return res.status(404).json({ success: false, error: 'Error: incorrect payload sent to route' })
+    }
+
+    const query = { url: req.body.url}
+    const twitterModel = mongoose.model('twitter', twitterSchema, 'twitter')
+
+    return twitterModel.find(query).then(twitterData => {
+        if (!twitterData || twitterData.length < 1) {
+            return res.status(404).json({ success: false, error: 'Error: no twitter data was found' })
+        }
+
+        return res.status(200).json({ success: true, error: null, payload: twitterData })
+    })
+}
+
 module.exports = {
     scrapeTwitterFunc,
     getTwitterPage,
     getAllTwitter,
-    selectTwitter
+    selectTwitter,
+    selectTwitterByURL
 }
