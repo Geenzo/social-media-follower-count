@@ -1,0 +1,6 @@
+.pageGallery {
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    grid-row-gap: 3%;
+    grid-column-gap: 2%;
+}

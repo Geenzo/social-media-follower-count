@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Container, Button, Card, CardBody } from 'mdbreact';
+import './allPages.css';
 
 class AllPages extends Component {
     constructor(props) {
@@ -27,21 +29,24 @@ class AllPages extends Component {
     }
     render() {
         const allPages = this.state.pages.map((page) => 
-         <div>
-             <p>Type: {page.type}</p>
-             <p>Url: {page.url}</p>
-             <p>Capture Date: {page.captureDate}</p>
-             <button>View Data</button>
-         </div>
+            <Card>
+                <CardBody>
+                <div>
+                    <p>Type: {page.type}</p>
+                    <p>URL: {page.url}</p>
+                    <p>Capture Date: {page.captureDate}</p>
+                    <Button>View Data</Button>
+                </div>
+                </CardBody>
+            </Card>
         );
 
         return (
             <div className="container-fluid">
                 <h1>All Pages</h1>
-
-                <div>
+                <Container className="pageGallery">
                     { allPages }
-                </div>
+                </Container>
             </div>
         );
     }
