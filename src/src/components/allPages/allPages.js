@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, Card, CardBody } from 'mdbreact';
+import { Container, Button, Card, CardBody, NavLink } from 'mdbreact';
 import './allPages.css';
 
 class AllPages extends Component {
@@ -35,7 +35,8 @@ class AllPages extends Component {
                     <p>Type: {page.type}</p>
                     <p>URL: {page.url}</p>
                     <p>Capture Date: {page.captureDate}</p>
-                    <Button>View Data</Button>
+                   
+                    <NavLink to={{ pathname: '/selectedPage', state: { pageUrl: page.url }}}><Button>View Page Data</Button></NavLink>
                 </div>
                 </CardBody>
             </Card>
