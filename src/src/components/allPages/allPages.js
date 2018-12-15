@@ -36,7 +36,7 @@ class AllPages extends Component {
                     <p>URL: {page.url}</p>
                     <p>Capture Date: {page.captureDate}</p>
                    
-                    <NavLink to={{ pathname: '/selectedPage', state: { pageUrl: page.url }}}><Button>View Page Data</Button></NavLink>
+                    <NavLink to={{ pathname: '/selectedPage', state: { pageUrl: page.url, pageType: page.type }}}><Button>View Page Data</Button></NavLink>
                 </div>
                 </CardBody>
             </Card>
