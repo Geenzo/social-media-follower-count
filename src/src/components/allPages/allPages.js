@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { Container, Button, Card, CardBody, NavLink } from 'mdbreact';
 import './allPages.css';
 
+import facebookImage from '../../images/facebook.png';
+import twitterImage from '../../images/twitter.png';
+import instagramImage from '../../images/instagram.png';
+
 class AllPages extends Component {
     constructor(props) {
         super(props);
@@ -28,11 +32,14 @@ class AllPages extends Component {
 
     }
     render() {
+
+        const pageTypeImg = (currentPageType) => currentPageType === 'twitter' ? twitterImage : currentPageType === 'facebook' ? facebookImage : currentPageType === 'instagram' ? instagramImage : ''
+
         const allPages = this.state.pages.map((page) => 
             <Card>
                 <CardBody>
                 <div>
-                    <p>Type: {page.type}</p>
+                    <img src={pageTypeImg(page.type)} height="30px" alt="page type logo"/>
                     <p>URL: {page.url}</p>
                     <p>Capture Date: {page.captureDate}</p>
                    
