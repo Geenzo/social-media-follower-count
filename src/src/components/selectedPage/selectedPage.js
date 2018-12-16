@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Card, CardBody } from 'mdbreact';
-
+import facebookImage from '../../images/facebook.png';
+import instagramImage from '../../images/instagram.png';
+import twitterImage from '../../images/twitter.png';
 class selectedPage extends Component {
     constructor() {
         super();
@@ -61,6 +63,8 @@ class selectedPage extends Component {
 
     const pageContents = (pageDetails) => currentPageType === 'twitter' ? twitterPage(pageDetails) : currentPageType === 'facebook' ? facebookPage(pageDetails) : currentPageType === 'instagram' ? instagramPage(pageDetails) : ''
 
+    const pageTypeImg = (currentPageType) => currentPageType === 'twitter' ? twitterImage : currentPageType === 'facebook' ? facebookImage : currentPageType === 'instagram' ? instagramImage : ''
+
     const allPageData = this.state.pageData.map(page => 
     <Card>
         <CardBody>
@@ -71,13 +75,10 @@ class selectedPage extends Component {
     return (
         <Container>
             <Row>
-                <Col md="12">
-                    <Card>
-                        <CardBody>
-                        <h3>{this.state.pageUrl}</h3>
-                        <h3>{this.state.pageType}</h3>
-                        </CardBody>
-                    </Card>
+                <Col md="12">     
+                    <h1>{this.state.pageUrl}</h1>
+                    <h1>{this.state.pageType}</h1>
+                    <img src={pageTypeImg(currentPageType)} height="50px" alt="page type logo"></img>
                 </Col>
             </Row>
             <Row>
