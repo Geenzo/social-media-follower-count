@@ -9,7 +9,8 @@ class selectedPage extends Component {
         this.state = {
             pageUrl: '',
             pageType: '',
-            pageData: []
+            pageData: [],
+            pageDataError: false,
         };
     }
 
@@ -30,7 +31,12 @@ class selectedPage extends Component {
         })
         .then(response => response.json())
         .then(parsedResponse => {
-            console.log('this is hte response', parsedResponse)
+            if (!parsedResponse.success) {
+                console.error(`Error: fetching page data - ${parsedResponse.error}`)
+                this.setState({
+                    pageDataError: true
+                })
+            }
 
             this.setState({
                 pageData: parsedResponse.payload
@@ -65,12 +71,16 @@ class selectedPage extends Component {
 
     const pageTypeImg = (currentPageType) => currentPageType === 'twitter' ? twitterImage : currentPageType === 'facebook' ? facebookImage : currentPageType === 'instagram' ? instagramImage : ''
 
-    const allPageData = this.state.pageData.map(page => 
+    const allPageData = !this.state.pageDataError ? this.state.pageData.map(page => 
     <Card>
         <CardBody>
            {pageContents(page)}
         </CardBody>
-    </Card>)
+    </Card>) : ''
+
+    const errorCard = <Card>
+        <h1 color="red">Error: No Page data was found for this page</h1>
+    </Card>
 
     return (
         <Container>
@@ -83,7 +93,7 @@ class selectedPage extends Component {
             </Row>
             <Row>
                 <Col md="12">
-                    {allPageData}
+                    {this.state.pageDataError ? errorCard : allPageData }
                 </Col>
             </Row>
         </Container>
