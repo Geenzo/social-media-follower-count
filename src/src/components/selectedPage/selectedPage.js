@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Card, CardBody } from 'mdbreact';
+import { Container, Row, Col, Card, Table, TableHead, TableBody } from 'mdbreact';
 import facebookImage from '../../images/facebook.png';
 import instagramImage from '../../images/instagram.png';
 import twitterImage from '../../images/twitter.png';
@@ -46,54 +46,83 @@ class selectedPage extends Component {
   render() {
     const currentPageType = this.state.pageType
 
-    const twitterPage = (page) => <div>
-           <h2>Followers: {page.Followers}</h2>
-            <h2>Following: {page.Following}</h2>
-            <h2>Likes: {page.Likes}</h2>
-            <h2>Tweets: {page.Tweets}</h2>
-            <h2>Capture Date: {page.captureDate}</h2>
-      </div>
+    const twitterPageHeader = () => <tr>
+            <th>#</th>
+            <th>Followers</th>
+            <th>Following</th>
+            <th>Likes</th>
+            <th>Tweets</th>
+            <th>Capture Date</th>
+        </tr>
 
-    const facebookPage = (page) => <div>
-           <h2>Followers: {page.follow}</h2>
-            <h2>Likes: {page.like}</h2>
-            <h2>Capture Date: {page.captureDate}</h2>
-      </div>
+    const facebookPageHeader = () => <tr>
+            <th>#</th>
+            <th>Followers</th>
+            <th>Likes</th>
+            <th>Capture Date</th>
+        </tr>
 
-    const instagramPage = (page) => <div>
-           <h2>Followers: {page.followers}</h2>
-            <h2>Following: {page.following}</h2>
-            <h2>Posts: {page.posts}</h2>
-            <h2>Capture Date: {page.captureDate}</h2>
-      </div>
+    const instagramPageHeader = () => <tr>
+            <th>#</th>
+            <th>Followers</th>
+            <th>Following</th>
+            <th>Posts</th>
+            <th>Capture Date</th>
+        </tr>
 
-    const pageContents = (pageDetails) => currentPageType === 'twitter' ? twitterPage(pageDetails) : currentPageType === 'facebook' ? facebookPage(pageDetails) : currentPageType === 'instagram' ? instagramPage(pageDetails) : ''
+    const pageContentsHeader = () => currentPageType === 'twitter' ? twitterPageHeader() : currentPageType === 'facebook' ? facebookPageHeader() : currentPageType === 'instagram' ? instagramPageHeader() : ''
 
     const pageTypeImg = (currentPageType) => currentPageType === 'twitter' ? twitterImage : currentPageType === 'facebook' ? facebookImage : currentPageType === 'instagram' ? instagramImage : ''
 
-    const allPageData = !this.state.pageDataError ? this.state.pageData.map(page => 
-    <Card>
-        <CardBody>
-           {pageContents(page)}
-        </CardBody>
-    </Card>) : ''
+    const allPageData = !this.state.pageDataError && currentPageType === 'twitter' ? this.state.pageData.map((page, index) => 
+        <tr>
+            <td>{index + 1}</td>
+            <td>{page.Followers}</td>
+            <td>{page.Following}</td>
+            <td>{page.Likes}</td>
+            <td>{page.Tweets}</td>
+            <td>{page.captureDate}</td>
+        </tr>) : !this.state.pageDataError && currentPageType === 'facebook' ? this.state.pageData.map((page, index) => 
+        <tr>
+            <td>{index + 1}</td>
+            <td>{page.follow}</td>
+            <td>{page.like}</td>
+            <td>{page.captureDate}</td>
+        </tr>) : !this.state.pageDataError && currentPageType === 'instagram' ? this.state.pageData.map((page, index) => 
+        <tr>
+            <td>{index + 1}</td>
+            <td>{page.followers}</td>
+            <td>{page.following}</td>
+            <td>{page.posts}</td>
+            <td>{page.captureDate}</td>
+        </tr>) : ''
 
     const errorCard = <Card>
         <h1 color="red">Error: No Page data was found for this page</h1>
     </Card>
 
+    const contentTable = <Table striped>
+        <TableHead color="primary-color" textWhite>
+            {pageContentsHeader()}
+        </TableHead>
+        <TableBody>
+            { allPageData }
+        </TableBody>
+    </Table>
+
     return (
         <Container>
             <Row>
-                <Col md="12">     
-                    <h1>{this.state.pageUrl}</h1>
-                    <h1>{this.state.pageType}</h1>
+                <Col md="3">     
                     <img src={pageTypeImg(currentPageType)} height="50px" alt="page type logo"></img>
+                </Col>
+                <Col md="9">
+                    <h1>{this.state.pageUrl}</h1>
                 </Col>
             </Row>
             <Row>
                 <Col md="12">
-                    {this.state.pageDataError ? errorCard : allPageData }
+                    {this.state.pageDataError ? errorCard : contentTable}
                 </Col>
             </Row>
         </Container>
