@@ -3,6 +3,8 @@ import { Container, Row, Col, Card, Table, TableHead, TableBody } from 'mdbreact
 import facebookImage from '../../images/facebook.png';
 import instagramImage from '../../images/instagram.png';
 import twitterImage from '../../images/twitter.png';
+import GetPostDetails from './getPosts/getPostDetails';
+
 class selectedPage extends Component {
     constructor() {
         super();
@@ -113,7 +115,7 @@ class selectedPage extends Component {
     return (
         <Container>
             <Row>
-                <Col md="3">     
+                <Col md="3">
                     <img src={pageTypeImg(currentPageType)} height="50px" alt="page type logo"></img>
                 </Col>
                 <Col md="9">
@@ -124,6 +126,10 @@ class selectedPage extends Component {
                 <Col md="12">
                     {this.state.pageDataError ? errorCard : contentTable}
                 </Col>
+            </Row>
+
+            <Row>
+                <GetPostDetails pageUrl={this.state.pageUrl} pageType={this.state.pageType}/>
             </Row>
         </Container>
     );
