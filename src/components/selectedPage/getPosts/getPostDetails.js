@@ -1,28 +1,38 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Card, Table, TableHead, TableBody } from 'mdbreact';
+import { Container, Row, Col, Card, Table, TableHead, TableBody, MDBInput, MDBCard, MDBCardBody, MDBCardTitle, MDBCardText, MDBBtn } from 'mdbreact';
 
 class GetPostDetails extends Component {
     constructor() {
         super();
         this.state = {
-            pageUrl: '',
+            pageName: '',
             pageType: '',
             numberOfPosts: 10,
             postData: [],
             postDataError: false,
+            retrievedPosts: false,
+            loadingPosts: false,
         };
     }
 
     componentWillMount() {
         this.setState({
-            pageUrl: this.props.pageUrl,
+            pageName: this.props.pageName,
             pageType: this.props.pageType
         })
+    }
 
-        const pageType = this.props.pageType.charAt(0).toUpperCase() + this.props.pageType.slice(1)
-        return fetch(`http://localhost:8081/get${pageType}Posts`, {
+    numberOfPostsChange(event) {
+        this.setState({numberOfPosts: event.target.value});
+    }
+
+    retrievePost() {
+        this.setState({ loadingPosts: true });
+        
+        const pageTypeParsed = this.state.pageType.charAt(0).toUpperCase() + this.state.pageType.slice(1)
+        return fetch(`http://localhost:8081/get${pageTypeParsed}Posts`, {
             method: 'POST',
-            body: JSON.stringify({ "url": 'https://www.facebook.com/pg/200StVincentStreet/posts/', "numberOfPosts": this.state.numberOfPosts}),
+            body: JSON.stringify({ "url": `https://www.facebook.com/pg/${this.state.pageName}/posts/`, "numberOfPosts": this.state.numberOfPosts}),
             headers:{
                 'Content-Type': 'application/json'
             }
@@ -37,7 +47,9 @@ class GetPostDetails extends Component {
             }
 
             this.setState({
-                postData: parsedResponse.payload
+                postData: parsedResponse.payload,
+                retrievedPosts: true,
+                loadingPosts: false,
             })
         })
     }
@@ -74,7 +86,7 @@ class GetPostDetails extends Component {
         const pageContentsHeader = () => currentPageType === 'twitter' ? twitterPageHeader() : currentPageType === 'facebook' ? facebookPageHeader() : currentPageType === 'instagram' ? instagramPageHeader() : ''
 
         const allPostData = !this.state.postDataError && currentPageType === 'twitter' ? this.state.postData.map((post, index) => 
-            <tr>
+            <tr key={index}>
                 <td>{index + 1}</td>
                 <td>{post.Followers}</td>
                 <td>{post.Following}</td>
@@ -82,7 +94,7 @@ class GetPostDetails extends Component {
                 <td>{post.Tweets}</td>
                 <td>{post.captureDate}</td>
             </tr>) : !this.state.postDataError && currentPageType === 'facebook' ? this.state.postData.map((post, index) => 
-            <tr>
+            <tr key={index}>
                 <td>{index + 1}</td>
                 <td>{post.postCopy}</td>
                 <td>{post.postLikes}</td>
@@ -90,7 +102,7 @@ class GetPostDetails extends Component {
                 <td>{post.postShares}</td>
                 <td>{post.postDate}</td>
             </tr>) : !this.state.postDataError && currentPageType === 'instagram' ? this.state.postData.map((post, index) => 
-            <tr>
+            <tr key={index}>
                 <td>{index + 1}</td>
                 <td>{post.followers}</td>
                 <td>{post.following}</td>
@@ -114,16 +126,39 @@ class GetPostDetails extends Component {
         return (
             <Container>
                 <Row>
-                    <Col md="12">
-                        <h1>Posts for {this.state.pageUrl}</h1>
-                        <h3>Number of posts:{this.state.postData.length}</h3>
+                    <Col md="4">
+                    </Col>
+                    {this.state.loadingPosts ? 
+                    <div className="spinner-border spinner-border-lg text-info" role="status">
+                        <span className="sr-only">Loading...</span>
+                    </div> : 
+                        <MDBCard md="4" style={{ width: "22rem" }}>
+                            <MDBCardBody>
+                            <MDBCardTitle>Posts to gather</MDBCardTitle>
+                            <MDBCardText>
+                                
+                            </MDBCardText>
+                                <MDBInput type="number" label="Number of Posts" onChange={(e) => this.numberOfPostsChange(e)} />
+                                <MDBBtn onClick={() => this.retrievePost()}>Submit</MDBBtn>
+                            </MDBCardBody>
+                        </MDBCard>
+                    }
+                    <Col md="4">
                     </Col>
                 </Row>
-                <Row>
-                    <Col md="12">
-                        {this.state.pageDataError ? errorCard : contentTable}
-                    </Col>
-                </Row>
+                {this.state.retrievedPosts && <div>
+                    <Row>
+                        <Col md="12">
+                            <h1>Posts for {this.state.pageName}</h1>
+                            <h3>Number of posts:{this.state.postData.length}</h3>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md="12">
+                            {this.state.pageDataError ? errorCard : contentTable}
+                        </Col>
+                    </Row>
+                </div>}
             </Container>
         );
     }

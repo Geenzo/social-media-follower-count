@@ -35,8 +35,8 @@ class AllPages extends Component {
 
         const pageTypeImg = (currentPageType) => currentPageType === 'twitter' ? twitterImage : currentPageType === 'facebook' ? facebookImage : currentPageType === 'instagram' ? instagramImage : ''
 
-        const allPages = this.state.pages.map((page) => 
-            <Card>
+        const allPages = this.state.pages.map((page, index) => 
+            <Card key={index}>
                 <CardBody>
                 <div>
                     <img src={pageTypeImg(page.type)} height="30px" alt="page type logo"/>

@@ -9,6 +9,7 @@ class selectedPage extends Component {
     constructor() {
         super();
         this.state = {
+            pageName: '',
             pageUrl: '',
             pageType: '',
             pageData: [],
@@ -16,10 +17,18 @@ class selectedPage extends Component {
         };
     }
 
-    componentWillMount() {
+    
+    parseURL = (url) => {
+        // turns url into array and gets the pages name from the url which is the [3]rd index
+        const pageName = url.split('/')[3];
+        return pageName;
+    }
+
+    componentWillMount = () => {
         this.setState({
             pageUrl: this.props.location.state.pageUrl,
-            pageType: this.props.location.state.pageType
+            pageType: this.props.location.state.pageType,
+            pageName: this.parseURL(this.props.location.state.pageUrl)
         })
 
         const currentPageUrl = this.props.location.state.pageUrl
@@ -77,7 +86,7 @@ class selectedPage extends Component {
     const pageTypeImg = (currentPageType) => currentPageType === 'twitter' ? twitterImage : currentPageType === 'facebook' ? facebookImage : currentPageType === 'instagram' ? instagramImage : ''
 
     const allPageData = !this.state.pageDataError && currentPageType === 'twitter' ? this.state.pageData.map((page, index) => 
-        <tr>
+        <tr key={index}>
             <td>{index + 1}</td>
             <td>{page.Followers}</td>
             <td>{page.Following}</td>
@@ -85,13 +94,13 @@ class selectedPage extends Component {
             <td>{page.Tweets}</td>
             <td>{page.captureDate}</td>
         </tr>) : !this.state.pageDataError && currentPageType === 'facebook' ? this.state.pageData.map((page, index) => 
-        <tr>
+        <tr key={index}>
             <td>{index + 1}</td>
             <td>{page.follow}</td>
             <td>{page.like}</td>
             <td>{page.captureDate}</td>
         </tr>) : !this.state.pageDataError && currentPageType === 'instagram' ? this.state.pageData.map((page, index) => 
-        <tr>
+        <tr key={index}>
             <td>{index + 1}</td>
             <td>{page.followers}</td>
             <td>{page.following}</td>
@@ -119,7 +128,7 @@ class selectedPage extends Component {
                     <img src={pageTypeImg(currentPageType)} height="50px" alt="page type logo"></img>
                 </Col>
                 <Col md="9">
-                    <h1>{this.state.pageUrl}</h1>
+                    <h1>{this.state.pageName}</h1>
                 </Col>
             </Row>
             <Row>
@@ -129,7 +138,7 @@ class selectedPage extends Component {
             </Row>
 
             <Row>
-                <GetPostDetails pageUrl={this.state.pageUrl} pageType={this.state.pageType}/>
+                <GetPostDetails pageName={this.state.pageName} pageType={this.state.pageType}/>
             </Row>
         </Container>
     );
