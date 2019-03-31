@@ -3,6 +3,8 @@ const cheerio = require('cheerio')
 const { twitterSchema } = require('../model/twitter')
 const mongoose = require('mongoose')
 
+const scrapeTwitterPosts = require('./twitter/scrapePosts');
+
 const getTwitterPage = function(url) {
     return new Promise((resolve, reject) => {
         request(url, function(error, response, html) {
@@ -100,10 +102,22 @@ const selectTwitterByURL = function(req, res) {
     })
 }
 
+const getTwitterPosts = async function(req, res) {
+    if (!req.body || !req.body.url || !req.body.numberOfPosts) {
+        return res.status(404).json({ success: false, error: 'Error: incorrect payload sent to route' })
+    }
+    const pageURL = req.body.url;
+    const numberOfPosts = req.body.numberOfPosts;
+    const response = await scrapeTwitterPosts(pageURL, numberOfPosts);
+
+    return res.status(200).json({ success: true, error: null, payload: response })
+}
+
 module.exports = {
     scrapeTwitterFunc,
     getTwitterPage,
     getAllTwitter,
     selectTwitter,
-    selectTwitterByURL
+    selectTwitterByURL,
+    getTwitterPosts
 }
