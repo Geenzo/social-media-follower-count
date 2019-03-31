@@ -12,13 +12,15 @@ class GetPostDetails extends Component {
             postDataError: false,
             retrievedPosts: false,
             loadingPosts: false,
+            postUrl: ''
         };
     }
 
     componentWillMount() {
         this.setState({
             pageName: this.props.pageName,
-            pageType: this.props.pageType
+            pageType: this.props.pageType,
+            postUrl: this.props.pageType === 'facebook' ? `https://www.facebook.com/pg/${this.props.pageName}/posts/` : this.props.pageType === 'twitter' ? `https://twitter.com/${this.props.pageName}` : 'N/A'
         })
     }
 
@@ -32,7 +34,7 @@ class GetPostDetails extends Component {
         const pageTypeParsed = this.state.pageType.charAt(0).toUpperCase() + this.state.pageType.slice(1)
         return fetch(`http://localhost:8081/get${pageTypeParsed}Posts`, {
             method: 'POST',
-            body: JSON.stringify({ "url": `https://www.facebook.com/pg/${this.state.pageName}/posts/`, "numberOfPosts": this.state.numberOfPosts}),
+            body: JSON.stringify({ "url": this.state.postUrl, "numberOfPosts": this.state.numberOfPosts}),
             headers:{
                 'Content-Type': 'application/json'
             }
@@ -59,10 +61,10 @@ class GetPostDetails extends Component {
 
         const twitterPageHeader = () => <tr>
                 <th>#</th>
-                <th>Followers</th>
-                <th>Following</th>
-                <th>Likes</th>
-                <th>Tweets</th>
+                <th>Copy</th>
+                <th>Replies</th>
+                <th>Retweets</th>
+                <th>Favourites</th>
                 <th>Capture Date</th>
             </tr>
 
@@ -88,11 +90,11 @@ class GetPostDetails extends Component {
         const allPostData = !this.state.postDataError && currentPageType === 'twitter' ? this.state.postData.map((post, index) => 
             <tr key={index}>
                 <td>{index + 1}</td>
-                <td>{post.Followers}</td>
-                <td>{post.Following}</td>
-                <td>{post.Likes}</td>
-                <td>{post.Tweets}</td>
-                <td>{post.captureDate}</td>
+                <td>{post.postCopy}</td>
+                <td>{post.postReplies}</td>
+                <td>{post.postRetweets}</td>
+                <td>{post.postFavourites}</td>
+                <td>{post.postDate}</td>
             </tr>) : !this.state.postDataError && currentPageType === 'facebook' ? this.state.postData.map((post, index) => 
             <tr key={index}>
                 <td>{index + 1}</td>
