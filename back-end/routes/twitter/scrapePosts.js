@@ -31,7 +31,7 @@ async function scrapeInfiniteScrollItems(
     let posts = [];
     while (posts.length < itemTargetCount) {
       // ._427x is the class for a whole post 'card'
-      posts = await page.$$('.stream-item');
+      posts = await page.$$('.js-stream-item');
 
       previousHeight = await page.evaluate('document.body.scrollHeight');
       await page.evaluate('window.scrollTo(0, document.body.scrollHeight)');
