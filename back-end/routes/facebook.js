@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer')
 const { facebookSchema } = require('../model/facebook')
 const mongoose = require('mongoose')
 
-const facebookPostScrape = require('./facebook/scrapePosts');
+const scrapeFacebookPosts = require('./facebook/scrapePosts');
 
 const getFacebookPage = async function(url) {
     console.log(`request sent to ${url}`);

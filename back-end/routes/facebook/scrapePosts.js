@@ -59,7 +59,7 @@ async function scrapeInfiniteScrollItems(
   return items;
 }
 
-module.exports = scrapeFacebookPosts = async(pageURL, numberOfPosts) => {
+module.exports =  scrapeFacebookPosts = async(pageURL, numberOfPosts) => {
   // Set up browser and page.
   const browser = await puppeteer.launch({
     headless: false,
