@@ -1,8 +1,9 @@
 const express = require('express')
 const app = express()
-const db = require('./model/db')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+// initiating database connection //
+require('./model/db')
 // const { scrapeLinkedinFunc } = require('./routes/linkedin')
 
 const { scrapeTwitterFunc, getAllTwitter, selectTwitter, selectTwitterByURL, getTwitterPosts } = require('./routes/twitter')

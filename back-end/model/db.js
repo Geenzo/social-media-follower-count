@@ -3,7 +3,7 @@ require('dotenv').config()
 
 const dbURI = process.env.DB_HOST
 
-mongoose.connect(dbURI)
+mongoose.connect(dbURI, { useNewUrlParser: true })
 
 mongoose.connection.on('connected', function () {  
   console.log('Mongoose connection open to ' + dbURI);
@@ -22,6 +22,4 @@ process.on('SIGINT', function() {
     console.log('Mongoose connection disconnected through app termination'); 
     process.exit(0); 
   }); 
-}); 
-
-// require('./../model/team'); 
+});
