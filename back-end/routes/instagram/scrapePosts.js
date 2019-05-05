@@ -44,7 +44,7 @@ const extractPosts = async (post) => {
           postCopy,
           postDate
         }
-        console.log('extrated post', postStats);
+
         return Promise.resolve(postStats);
       }
       return null
@@ -85,7 +85,6 @@ async function scrapeInfiniteScrollItems(
 
   } catch(e) { console.warn(e) }
 
-  console.log('retunr itmes', items);
   return items;
 }
 
