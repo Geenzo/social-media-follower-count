@@ -20,12 +20,25 @@ class GetPostDetails extends Component {
         this.setState({
             pageName: this.props.pageName,
             pageType: this.props.pageType,
-            postUrl: this.props.pageType === 'facebook' ? `https://www.facebook.com/pg/${this.props.pageName}/posts/` : this.props.pageType === 'twitter' ? `https://twitter.com/${this.props.pageName}` : 'N/A'
+            postUrl: this.setPageType(this.props.pageName, this.props.pageType),
         })
     }
 
     numberOfPostsChange(event) {
         this.setState({numberOfPosts: event.target.value});
+    }
+
+    setPageType(pageName, pageType) {
+        switch(pageType) {
+            case 'facebook':
+                return `https://www.facebook.com/pg/${pageName}/posts/`;
+            case 'twitter':
+                return `https://twitter.com/${pageName}`;
+            case 'instagram':
+                return `https://www.instagram.com/${pageName}`;
+            default:
+                return 'Error';
+        }
     }
 
     retrievePost() {
