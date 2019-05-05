@@ -92,9 +92,9 @@ class GetPostDetails extends Component {
 
         const instagramPageHeader = () => <tr>
                 <th>#</th>
-                <th>Followers</th>
-                <th>Following</th>
-                <th>Posts</th>
+                <th>Copy</th>
+                <th>Likes</th>
+                <th>Comments</th>
                 <th>Capture Date</th>
             </tr>
 
@@ -119,10 +119,10 @@ class GetPostDetails extends Component {
             </tr>) : !this.state.postDataError && currentPageType === 'instagram' ? this.state.postData.map((post, index) => 
             <tr key={index}>
                 <td>{index + 1}</td>
-                <td>{post.followers}</td>
-                <td>{post.following}</td>
-                <td>{post.posts}</td>
-                <td>{post.captureDate}</td>
+                <td>{post.postCopy}</td>
+                <td>{post.postLikes}</td>
+                <td>{post.postComments}</td>
+                <td>{post.postDate}</td>
             </tr>) : ''
 
         const errorCard = <Card>
