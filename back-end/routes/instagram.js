@@ -2,6 +2,8 @@ const puppeteer = require('puppeteer')
 const { instagramSchema } = require('../model/instagram')
 const mongoose = require('mongoose')
 
+const scrapeInstagramPosts = require('./instagram/scrapePosts');
+
   //TODO: find way to make this fetch page faster
   async function getInstagramPage(url) {
     console.log(`request sent to ${url}`);
@@ -116,10 +118,22 @@ const selectInstagramByURL = function(req, res) {
     })
 }
 
+const getInstagramPosts = async function(req, res) {
+    if (!req.body || !req.body.url || !req.body.numberOfPosts) {
+        return res.status(404).json({ success: false, error: 'Error: incorrect payload sent to route' })
+    }
+    const pageURL = req.body.url;
+    const numberOfPosts = req.body.numberOfPosts;
+    const response = await scrapeInstagramPosts(pageURL, numberOfPosts);
+
+    return res.status(200).json({ success: true, error: null, payload: response })
+}
+
 module.exports = {
     scrapeInstagramFunc,
     getInstagramPage,
     getAllInstagram,
     selectInstagram,
-    selectInstagramByURL
+    selectInstagramByURL,
+    getInstagramPosts,
 }
