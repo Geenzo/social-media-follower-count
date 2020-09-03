@@ -12,7 +12,7 @@
     "express": "^4.16.3",
     "got": "^9.6.0",
     "mongoose": "^5.3.2",
-    "puppeteer": "^1.4.0",
+    "puppeteer": "^1.13.0",
     "request": "^2.88.0"
   }
 }
